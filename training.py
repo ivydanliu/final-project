@@ -13,8 +13,12 @@ from data_processing import*
 	X_test is an m_test x n array
 	y_test is a 1 x m_test array
 '''
-result = read_json(100)
-X_train, X_test, y_train, y_test = get_processed_data(result)
+result = read_json(10000)
+path = "/Users/IvyLiu/Desktop/math189-Final-Project/train2014/"
+X_train, X_test, y_train, y_test = get_processed_data(result, path)
+print (X_train)
+print(X_train.shape)
+print(y_train.shape)
 print('-- Number of trainimng samples: {0:4d}'.format(len(y_train)))
 print('-- Number of test samples: {0:4d}'.format(len(y_test)))
 
@@ -194,7 +198,7 @@ def alg_batch(X_train, y_train, X_test, y_test, bin_clf = False):
 if __name__ == '__main__':
 	# multiclass original
 	print('==> Running algorithms on multiclass data with full dimension...')
-	alg_batch(X_train, y_train, X_test, y_test)
+	alg_batch(X_train, y_train, X_test, y_test, bin_clf = True)
 	print('============================================')
 	# # multiclass PCA
 	# print('==> Running PCA multiclass data...')

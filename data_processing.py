@@ -1,6 +1,9 @@
 import json
-import cv2
+import cv2 as cv
 import numpy as np
+import sys
+import random
+import os
 
 def read_json(num, filename_to_read = "instances_train2014.json"):
     """ This function takes in two arguments:
@@ -18,7 +21,8 @@ def read_json(num, filename_to_read = "instances_train2014.json"):
     result = []
 
     for i in range(num):
-        annotation = data["annotations"][i]
+        index = random.randint(0, 82782)
+        annotation = data["annotations"][index]
         imageID = annotation['image_id']
         categoryID = annotation['category_id']
         result.append( (imageID, categoryID) )
@@ -26,7 +30,7 @@ def read_json(num, filename_to_read = "instances_train2014.json"):
     return result
 
 
-def get_processed_data(result):
+def get_processed_data(result, path):
     """ This function takes in one argument:
             1) LoR, a list of tuples with each tuple in the form of (review, stars)
 
@@ -38,18 +42,29 @@ def get_processed_data(result):
         with the corresponding review.
     """
     X = []
+    # Y = np.zeros((len(result), 1))
     Y = []
 
     # get filename from image_not_btw_42_142_indices
     for imageID, categoryID in result:
         length = 6-len(str(imageID))
-        filename = 'COCO_train2014_0'+ length* '0' + str(imageID) + '.jpg'
-        Y.append(categoryID)
-        img = cv2.imread(filename)
-        X.append(img)
+        filename = 'COCO_train2014_000000'+ '0'*length + str(imageID) + '.jpg'
+        for file in os.listdir(path):
+            if file == filename:
+                # print(categoryID)
+                Y.append(categoryID)
+                img = cv.imread(path+filename, 0)
+                img = cv.resize(img, dsize=(256, 256))
+                # img = img[0:256, 0:256] # TODO: re-sample
+                # print (img.shape)
+                # subsampling the image
+                img = img.flatten()
+                # print(img.shape)
+                X.append(img)
 
-
-        #
+    X = np.array(X)
+    Y = np.array(Y).reshape(-1, 1)
+    # print(X.shape)
         # features = process_review(review)
         # features_L.append(features)
         # Y.append(stars)
@@ -67,10 +82,13 @@ def get_processed_data(result):
 
     Y_train = Y[:size_train]
     Y_test = Y[size_train:]
-
+    # print(Y_train.min(), Y_train.max())
     return X_train, X_test, Y_train, Y_test
 
 # main driver function
 if __name__ == '__main__':
-    result = read_json(100)
-    get_processed_data(result)
+    result = read_json(1000)
+    # print ('result is', result[:10])
+
+    path="/Users/IvyLiu/Desktop/math189-Final-Project/train2014/"
+    get_processed_data(result, path)
