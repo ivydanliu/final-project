@@ -6,17 +6,15 @@ from sklearn.metrics import confusion_matrix
 
 # module to load data
 print('==> Start to load data...')
-import loadData as data
+from data_processing import*
 '''
 	X_train is an m_train x n array
 	y_train is a 1 x m_train array
 	X_test is an m_test x n array
 	y_test is a 1 x m_test array
 '''
-X_train = data.X_train
-y_train = data.y_train
-X_test = data.X_test
-y_test = data.y_test
+result = read_json(100)
+X_train, X_test, y_train, y_test = get_processed_data(result)
 print('-- Number of trainimng samples: {0:4d}'.format(len(y_train)))
 print('-- Number of test samples: {0:4d}'.format(len(y_test)))
 
@@ -188,9 +186,9 @@ def MLP(X_train, y_train, X_test, y_test, reg = 0.01, lc = False, \
 
 def alg_batch(X_train, y_train, X_test, y_test, bin_clf = False):
 	logreg(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	kernelSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	# linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	# kernelSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	# MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 
 # main driver function
 if __name__ == '__main__':
