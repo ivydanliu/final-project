@@ -13,7 +13,7 @@ from data_processing import*
 	X_test is an m_test x n array
 	y_test is a 1 x m_test array
 '''
-result = read_json(5000)
+result = read_json(10000)
 path = "/Users/IvyLiu/Desktop/math189-Final-Project/train2014/"
 X_train, X_test, y_train, y_test = get_processed_data(result, path)
 print (X_train)
@@ -276,9 +276,9 @@ def linearSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 
 def alg_batch(X_train, y_train, X_test, y_test, bin_clf = False):
 	# logreg(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	# linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	# kernelSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	# MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 
 # main driver function
 if __name__ == '__main__':
