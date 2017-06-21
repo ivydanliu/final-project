@@ -29,10 +29,10 @@ def read_json(num, filename_to_read = "instances_train2014.json"):
         if categoryID in range(16,26):
             result.append( (imageID, categoryID) )
 
-        # shuffling
-        random.shuffle(result)
+    # shuffling
+    random.shuffle(result)
 
-        result = result[:num]
+    result = result[:num]
     return result
 
 
@@ -94,7 +94,6 @@ def get_processed_data(result, path):
 # main driver function
 if __name__ == '__main__':
     result = read_json(10000)
-    # print ('result is', result)
 
     path="/Users/IvyLiu/Desktop/math189-Final-Project/train2014/"
     get_processed_data(result, path)

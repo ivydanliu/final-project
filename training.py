@@ -275,7 +275,7 @@ def linearSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 	print('********************************')
 
 def alg_batch(X_train, y_train, X_test, y_test, bin_clf = False):
-	logreg(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	# logreg(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	# linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	# kernelSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
