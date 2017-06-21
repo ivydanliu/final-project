@@ -20,13 +20,19 @@ def read_json(num, filename_to_read = "instances_train2014.json"):
     data = json.loads( string_data )
     result = []
 
-    for i in range(num):
-        index = random.randint(0, 82782)
-        annotation = data["annotations"][index]
-        imageID = annotation['image_id']
+    for i in range(82782):
+        nnotation = data["annotations"][i]
+        annotation = data["annotations"][i]
         categoryID = annotation['category_id']
-        result.append( (imageID, categoryID) )
+        imageID = annotation['image_id']
+        # get the animals category images
+        if categoryID in range(16,26):
+            result.append( (imageID, categoryID) )
 
+        # shuffling
+        random.shuffle(result)
+
+        result = result[:num]
     return result
 
 
@@ -82,13 +88,13 @@ def get_processed_data(result, path):
 
     Y_train = Y[:size_train]
     Y_test = Y[size_train:]
-    # print(Y_train.min(), Y_train.max())
+    print(Y_train.min(), Y_train.max())
     return X_train, X_test, Y_train, Y_test
 
 # main driver function
 if __name__ == '__main__':
-    result = read_json(1000)
-    # print ('result is', result[:10])
+    result = read_json(10000)
+    # print ('result is', result)
 
     path="/Users/IvyLiu/Desktop/math189-Final-Project/train2014/"
     get_processed_data(result, path)
