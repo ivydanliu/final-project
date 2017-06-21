@@ -231,7 +231,7 @@ def MLP(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 	print('********************************')
 	print('==> Setting up MLP model')
 	model = neural_network.MLPClassifier(alpha = reg, \
-		hidden_layer_sizes = (100, 100, 100,))
+		hidden_layer_sizes = (1000, 1000, 1000,))
 	training(model, 'MLP', X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	if lc:
 		title = 'Learning Curve (MLP, $\lambda = {}$, hidden = [100, 100, 100])'.format(reg)
@@ -276,9 +276,9 @@ def linearSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 
 def alg_batch(X_train, y_train, X_test, y_test, bin_clf = False):
 	# logreg(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	# linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	# kernelSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	# MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 
 # main driver function
 if __name__ == '__main__':
