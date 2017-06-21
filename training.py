@@ -13,7 +13,7 @@ from data_processing import*
 	X_test is an m_test x n array
 	y_test is a 1 x m_test array
 '''
-result = read_json(10000)
+result = read_json(5000)
 path = "/Users/IvyLiu/Desktop/math189-Final-Project/train2014/"
 X_train, X_test, y_train, y_test = get_processed_data(result, path)
 print (X_train)
@@ -106,6 +106,66 @@ def learning_curve_wrapper(model, fname, title, X, y, \
 		plt.close()
 	print('==> Plotting completed')
 
+def plot_confusion_matrix(cmat, classes,
+                          normalize=False,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues,
+                          savename = 'confusion.png'):
+    """
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+    """
+    import itertools
+    print('==> Plotting confusion matrix...')
+    plt.imshow(cmat, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    if normalize:
+        cmat = cmat.astype('float') / cmat.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+
+    print(cmat)
+
+    thresh = cmat.max() / 2.
+    for i, j in itertools.product(range(cmat.shape[0]), range(cmat.shape[1])):
+        plt.text(j, i, cmat[i, j],
+                 horizontalalignment="center",
+                 color="white" if cmat[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.savefig(savename, format = 'png')
+    plt.close()
+
+def bin_clf_analysis(y, y_pred):
+	'''
+		Analyze result of binary classification.
+		Return precision, recall, F1-score.
+	'''
+	m = len(y)
+	count_p, count_r = 0, 0
+	total_p, total_r = 0, 0
+	for index in range(m):
+		actual, pred = y.item(index), y_pred.item(index)
+		if actual == 1:
+			total_r += 1
+			if pred == 1:
+				count_r += 1
+		if pred == 1:
+			total_p += 1
+			if actual == 1:
+				count_p += 1
+	precision = 1. * count_p / total_p
+	recall = 1. * count_r / total_r
+	f1 = 2. * precision * recall / (precision + recall)
+	return precision, recall, f1
 
 def training(model, modelName, X_train, y_train, X_test, y_test, \
 	bin_clf = False):
@@ -136,7 +196,7 @@ def training(model, modelName, X_train, y_train, X_test, y_test, \
 		print('-- Testing F1-score: {a:4.4f}'.format(a = f1))
 	print('================')
 
-def logreg(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
+def logreg(X_train, y_train, X_test, y_test, reg = 10, lc = False, \
 	bin_clf = False, cm = True):
 	'''
 		Produce logistic regression accuracy based on the training set and
@@ -162,7 +222,7 @@ def logreg(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 			savename = save_file_name)
 	print('********************************')
 
-def MLP(X_train, y_train, X_test, y_test, reg = 0.01, lc = False, \
+def MLP(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 	bin_clf = False, cm = True):
 	'''
 		Produce the multilayer perceptron training report based on the training set and
@@ -188,17 +248,43 @@ def MLP(X_train, y_train, X_test, y_test, reg = 0.01, lc = False, \
 			savename = save_file_name)
 	print('********************************')
 
+def linearSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
+	bin_clf = False, cm = True):
+	'''
+		Produce the linear support vector machine report based on the training set and
+		the test set
+	'''
+	print('********************************')
+	print('==> Setting up model for linear support vector machine...')
+	model = svm.LinearSVC(C = 1.0 / reg, verbose = 0)
+	training(model, 'linear SVM', X_train, y_train, X_test, y_test, \
+		bin_clf = bin_clf)
+	if lc:
+		title = 'Learning Curve (Linear SVM, $\lambda = {}$)'.format(reg)
+		save_file_name = 'linsvm'
+		learning_curve_wrapper(model, save_file_name, title, X_train, y_train)
+	if cm:
+		y_pred = model.predict(X_test)
+		num_classes = int(y_train.max()) + 1
+		classes = ['class {}'.format(i) for i in range(num_classes)]
+		cmat = confusion_matrix(y_test, y_pred)
+		title = 'Confusion Matrix for Linear SVM'
+		save_file_name = 'linsvm_cm.png'
+		plot_confusion_matrix(cmat, classes, title = title, \
+			savename = save_file_name)
+	print('********************************')
+
 def alg_batch(X_train, y_train, X_test, y_test, bin_clf = False):
 	logreg(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	# linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	# kernelSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	# MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 
 # main driver function
 if __name__ == '__main__':
 	# multiclass original
 	print('==> Running algorithms on multiclass data with full dimension...')
-	alg_batch(X_train, y_train, X_test, y_test, bin_clf = True)
+	alg_batch(X_train, y_train, X_test, y_test, bin_clf = False)
 	print('============================================')
 	# # multiclass PCA
 	# print('==> Running PCA multiclass data...')
