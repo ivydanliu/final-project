@@ -3,6 +3,7 @@ from sklearn import linear_model, svm, neural_network
 import time
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
+import pickle
 
 # module to load data
 print('==> Start to load data...')
@@ -13,7 +14,7 @@ from data_processing import*
 	X_test is an m_test x n array
 	y_test is a 1 x m_test array
 '''
-result = read_json(10000)
+result = read_json(5000)
 path = "/Users/IvyLiu/Desktop/math189-Final-Project/train2014/"
 X_train, X_test, y_train, y_test = get_processed_data(result, path)
 print (X_train)
@@ -220,9 +221,15 @@ def logreg(X_train, y_train, X_test, y_test, reg = 10, lc = False, \
 		save_file_name = 'logreg_cm.png'
 		plot_confusion_matrix(cmat, classes, title = title, \
 			savename = save_file_name)
+
+	# save the model to disk
+	print('==> Saving the model for logistic regression...')
+	filename = 'finalized_model_logReg.sav'
+	pickle.dump(model, open(filename, 'wb'))
 	print('********************************')
 
-def MLP(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
+
+def MLP(X_train, y_train, X_test, y_test, reg = 0.01, lc = False, \
 	bin_clf = False, cm = True):
 	'''
 		Produce the multilayer perceptron training report based on the training set and
@@ -231,7 +238,7 @@ def MLP(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 	print('********************************')
 	print('==> Setting up MLP model')
 	model = neural_network.MLPClassifier(alpha = reg, \
-		hidden_layer_sizes = (1000, 1000, 1000,))
+		hidden_layer_sizes = (1000, 1000, 1000))
 	training(model, 'MLP', X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	if lc:
 		title = 'Learning Curve (MLP, $\lambda = {}$, hidden = [100, 100, 100])'.format(reg)
@@ -246,6 +253,10 @@ def MLP(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 		save_file_name = 'MLP_cm.png'
 		plot_confusion_matrix(cmat, classes, title = title, \
 			savename = save_file_name)
+	# save the model to disk
+	print('==> Saving the model for MLP...')
+	filename = 'finalized_model_MLP.sav'
+	pickle.dump(model, open(filename, 'wb'))
 	print('********************************')
 
 def linearSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
@@ -272,13 +283,48 @@ def linearSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 		save_file_name = 'linsvm_cm.png'
 		plot_confusion_matrix(cmat, classes, title = title, \
 			savename = save_file_name)
+
+	# save the model to disk
+	print('==> Saving the model for linearSVM...')
+	filename = 'finalized_model_linearSVM.sav'
+	pickle.dump(model, open(filename, 'wb'))
+	print('********************************')
+def kernelSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
+	bin_clf = False, cm = True):
+	'''
+		Produce the rbf-kernel support vector machine report based on the training set and
+		the test set
+	'''
+	print('********************************')
+	print(' ==> Setting up model for rbf-kernel support vector machine...')
+	model = svm.SVC(C = 1.0 / reg, verbose = 0)
+	training(model, 'rbf-kernel SVM', X_train, y_train, X_test, y_test, \
+		bin_clf = bin_clf)
+	title = 'Learning Curve (rbf-kernel SVM, $\lambda = {}$)'.format(reg)
+	if lc:
+		save_file_name = 'rbfsvm'
+		learning_curve_wrapper(model, save_file_name, title, X_train, y_train)
+	if cm:
+		y_pred = model.predict(X_test)
+		num_classes = int(y_train.max()) + 1
+		classes = ['class {}'.format(i) for i in range(num_classes)]
+		cmat = confusion_matrix(y_test, y_pred)
+		title = 'Confusion Matrix for Kernel SVM'
+		save_file_name = 'kersvm_cm.png'
+		plot_confusion_matrix(cmat, classes, title = title, \
+			savename = save_file_name)
+	# save the model to disk
+	print('==> Saving the model for kernelSVM...')
+	filename = 'finalized_model_kernelSVM.sav'
+	pickle.dump(model, open(filename, 'wb'))
+	print('********************************')
 	print('********************************')
 
 def alg_batch(X_train, y_train, X_test, y_test, bin_clf = False):
-	# logreg(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	logreg(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	# linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 	# kernelSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	# MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 
 # main driver function
 if __name__ == '__main__':

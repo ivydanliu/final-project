@@ -1,0 +1,14 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Data Processing}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Introduction to the COCO dataset}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Assigning training and testing data sets}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Dimension analysis}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{Learning Algorithms}{}% 6
+\BOOKMARK [2][-]{subsection.3.1}{Multinomial Logistic Regression}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.2}{Multi-layer Perceptron\(MLP\) Classifier}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Performance and Analysis}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{Evaluate Performance: Confusion Matrix}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.2}{Performance of Multinomial Logistic Regression}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.3}{Performance of Multi-layer Perceptrons}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.4}{Performance of Linear SVM}{section.4}% 13
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 14

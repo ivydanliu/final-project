@@ -32,7 +32,8 @@ def read_json(num, filename_to_read = "instances_train2014.json"):
     # shuffling
     random.shuffle(result)
 
-    result = result[:num]
+    #
+    # result = result[:num]
     return result
 
 
@@ -60,7 +61,7 @@ def get_processed_data(result, path):
                 # print(categoryID)
                 Y.append(categoryID)
                 img = cv.imread(path+filename, 0)
-                img = cv.resize(img, dsize=(256, 256))
+                img = cv.resize(img, dsize=(50, 50))
                 # img = img[0:256, 0:256] # TODO: re-sample
                 # print (img.shape)
                 # subsampling the image
