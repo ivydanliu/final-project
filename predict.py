@@ -11,7 +11,7 @@ def predict(filename, model):
     # process the input image
     X_test = []
     img = cv.imread(filename, 0)
-    img = cv.resize(img, dsize=(50,50)) #dependes on model
+    img = cv.resize(img, dsize=(256,256)) #dependes on model
     img = img.flatten()
     X_test.append(img)
 
@@ -26,13 +26,14 @@ if __name__ == '__main__':
     print('==> Predicting test image category...')
     # filename1 = input("\nGreat! Please enter the filename of image you want to test: ")
     # print (filename)
-    filename1 = 'cow.png'
-    filename2 = 'dog.jpg'
-    filename3 = 'cat.jpg'
-    filename4 = 'sheep.jpg'
-    filename5 = 'bird.jpg'
-    filename6 = 'horse.jpg'
-    model = 'finalized_model_MLP.sav'
+    filename1 = 'demo imgs/cow.png'
+    filename2 = 'demo imgs/dog.jpg'
+    filename3 = 'demo imgs/cat.jpg'
+    filename4 = 'demo imgs/sheep.jpg'
+    filename5 = 'demo imgs/bird.jpg'
+    filename6 = 'demo imgs/horse.jpg'
+    # model = 'finalized_model_MLP.sav'
+    model = 'finalized_model_kernelSVM.sav'
     result1 = predict(filename1, model)
     result2 = predict(filename2, model)
     result3 = predict(filename3, model)

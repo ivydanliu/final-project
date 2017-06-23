@@ -23,90 +23,6 @@ print(y_train.shape)
 print('-- Number of trainimng samples: {0:4d}'.format(len(y_train)))
 print('-- Number of test samples: {0:4d}'.format(len(y_test)))
 
-def plot_learning_curve(model, title, X, y, ylim=None, cv=None,
-                        n_jobs=1, train_sizes=np.linspace(.1, 1.0, 5)):
-    """
-    Generate a simple plot of the test and training learning curve.
-
-    Parameters
-    ----------
-    model : object type that implements the "fit" and "predict" methods
-        An object of that type which is cloned for each validation.
-
-    title : string
-        Title for the chart.
-
-    X : array-like, shape (n_samples, n_features)
-        Training vector, where n_samples is the number of samples and
-        n_features is the number of features.
-
-    y : array-like, shape (n_samples) or (n_samples, n_features), optional
-        Target relative to X for classification or regression;
-        None for unsupervised learning.
-
-    ylim : tuple, shape (ymin, ymax), optional
-        Defines minimum and maximum yvalues plotted.
-
-    cv : int, cross-validation generator or an iterable, optional
-        Determines the cross-validation splitting strategy.
-        Possible inputs for cv are:
-          - None, to use the default 3-fold cross-validation,
-          - integer, to specify the number of folds.
-          - An object to be used as a cross-validation generator.
-          - An iterable yielding train/test splits.
-
-        For integer/None inputs, if ``y`` is binary or multiclass,
-        :class:`StratifiedKFold` used. If the model is not a classifier
-        or if ``y`` is neither binary nor multiclass, :class:`KFold` is used.
-
-        Refer :ref:`User Guide <cross_validation>` for the various
-        cross-validators that can be used here.
-
-    n_jobs : integer, optional
-        Number of jobs to run in parallel (default 1).
-    """
-    from sklearn.model_selection import learning_curve
-    plt.figure()
-    plt.title(title)
-    if ylim is not None:
-        plt.ylim(*ylim)
-    plt.xlabel("Training examples")
-    plt.ylabel("Score")
-    print('==> Generating learning curve...')
-    train_sizes, train_scores, test_scores = learning_curve(
-        model, X, y, cv=cv, n_jobs=n_jobs, train_sizes=train_sizes)
-    train_scores_mean = np.mean(train_scores, axis=1)
-    train_scores_std = np.std(train_scores, axis=1)
-    test_scores_mean = np.mean(test_scores, axis=1)
-    test_scores_std = np.std(test_scores, axis=1)
-    plt.grid()
-
-    plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
-                     train_scores_mean + train_scores_std, alpha=0.1,
-                     color="r")
-    plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
-                     test_scores_mean + test_scores_std, alpha=0.1, color="g")
-    plt.plot(train_sizes, train_scores_mean, 'o-', color="r",
-             label="Training score")
-    plt.plot(train_sizes, test_scores_mean, 'o-', color="g",
-             label="Cross-validation score")
-
-    plt.legend(loc="best")
-    return plt
-
-def learning_curve_wrapper(model, fname, title, X, y, \
-	train_sizes = np.linspace(.1, 1.0, 6), if_show = False):
-	n_samples = min(35000, len(X))
-	X = X[:n_samples, :]
-	y = y[:n_samples]
-	plot_learning_curve(model, title, X, y, train_sizes = train_sizes)
-	if if_show:
-		plt.show()
-	else:
-		plt.savefig('{}.png'.format(fname), format = 'png')
-		plt.close()
-	print('==> Plotting completed')
-
 def plot_confusion_matrix(cmat, classes,
                           normalize=False,
                           title='Confusion matrix',
@@ -198,7 +114,7 @@ def training(model, modelName, X_train, y_train, X_test, y_test, \
 	print('================')
 
 def logreg(X_train, y_train, X_test, y_test, reg = 10, lc = False, \
-	bin_clf = False, cm = True):
+	bin_clf = False, cm = True, solver='sag'):
 	'''
 		Produce logistic regression accuracy based on the training set and
 		the test set
@@ -289,6 +205,7 @@ def linearSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 	filename = 'finalized_model_linearSVM.sav'
 	pickle.dump(model, open(filename, 'wb'))
 	print('********************************')
+
 def kernelSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 	bin_clf = False, cm = True):
 	'''
@@ -313,6 +230,7 @@ def kernelSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 		save_file_name = 'kersvm_cm.png'
 		plot_confusion_matrix(cmat, classes, title = title, \
 			savename = save_file_name)
+
 	# save the model to disk
 	print('==> Saving the model for kernelSVM...')
 	filename = 'finalized_model_kernelSVM.sav'
@@ -322,9 +240,9 @@ def kernelSVM(X_train, y_train, X_test, y_test, reg = 0.2, lc = False, \
 
 def alg_batch(X_train, y_train, X_test, y_test, bin_clf = False):
 	logreg(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	# linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	# kernelSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
-	# MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	linearSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	kernelSVM(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
+	MLP(X_train, y_train, X_test, y_test, bin_clf = bin_clf)
 
 # main driver function
 if __name__ == '__main__':
@@ -332,15 +250,4 @@ if __name__ == '__main__':
 	print('==> Running algorithms on multiclass data with full dimension...')
 	alg_batch(X_train, y_train, X_test, y_test, bin_clf = False)
 	print('============================================')
-	# # multiclass PCA
-	# print('==> Running PCA multiclass data...')
-	# X_train_rot, D_train, k_train = PCA(X_train)
-	# PCA_analysis(D_train, title = 'PCA Analysis for Training Data', \
-	# 	savename = 'PCA_train.png')
-	# X_test_rot, D_test, k_test = PCA(X_test, k = k_train)
-	# alg_batch(X_train_rot, y_train, X_test_rot, y_test)
-	# binary original
-	# print('==> Running algorithms on binary classification with full dimension...')
-	# y_train_bin = (y_train != 11).astype(int)
-	# y_test_bin = (y_test != 11).astype(int)
-	# alg_batch(X_train, y_train_bin, X_test, y_test_bin, bin_clf = True)
+	

@@ -33,7 +33,7 @@ def read_json(num, filename_to_read = "instances_train2014.json"):
     random.shuffle(result)
 
     #
-    # result = result[:num]
+    result = result[:num]
     return result
 
 
@@ -61,7 +61,7 @@ def get_processed_data(result, path):
                 # print(categoryID)
                 Y.append(categoryID)
                 img = cv.imread(path+filename, 0)
-                img = cv.resize(img, dsize=(50, 50))
+                img = cv.resize(img, dsize=(256, 256))
                 # img = img[0:256, 0:256] # TODO: re-sample
                 # print (img.shape)
                 # subsampling the image
@@ -94,7 +94,7 @@ def get_processed_data(result, path):
 
 # main driver function
 if __name__ == '__main__':
-    result = read_json(10000)
+    result = read_json(5000)
 
     path="/Users/IvyLiu/Desktop/math189-Final-Project/train2014/"
     get_processed_data(result, path)
