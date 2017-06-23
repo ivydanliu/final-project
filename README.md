@@ -27,6 +27,6 @@ This is a project by Chudan Ivy Liu and Xinyu Yang. All code was written in anac
        predicts the test image using previously saved model (demo)
 
 
-2. Performance Visualization Parameters
+2. Performance Visualization Part
     * `cm.py`:  
       visualizes algorithm performance by plotting the confusion matrix
