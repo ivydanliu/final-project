@@ -15,6 +15,7 @@ This is a project by Chudan Ivy Liu and Xinyu Yang. All code was written in anac
 
 # Overview of Design Decisions
 
+1. Machine Learning Part
     * `main.py`:  
        is the executable of interactive classification by training and saving the
        model to local disk
@@ -24,3 +25,8 @@ This is a project by Chudan Ivy Liu and Xinyu Yang. All code was written in anac
        trains data using four different algorithms
     * `predict.py`:
        predicts the test image using previously saved model (demo)
+
+
+2. Performance Visualization Parameters
+    * `cm.py`:  
+      visualizes algorithm performance by plotting the confusion matrix
