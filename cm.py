@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 
 
-
-
 def plot_confusion_matrix(cmat, classes,
                           normalize=False,
                           title='Confusion matrix',
@@ -49,7 +47,7 @@ def plot_confusion_matrix(cmat, classes,
 
 
 cmat = np.array([[152,28,21,16,22,17],[48,33,39,22,17,17],[39,41,44,17,23,22],[22,21,15,6,153,14],[32,18,19,22,14,107]])
-classes_L = ['bird', 'cat', 'dog', 'horse', 'sheep', 'cow']  
+classes_L = ['bird', 'cat', 'dog', 'horse', 'sheep', 'cow']
 classes = ['class {}'.format(i) for i in classes_L]
 title = 'Confusion Matrix for Logistic Regression'
 save_file_name = 'logreg_cm_new.png'
